@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "myapplication"
 include ':retrofitphone'
 include ':retrofitmovie'
+include ':recyclerview'
+include ':androidmember'

@@ -5,12 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btn = findViewById(R.id.button);
-        recyclerView = findViewById(R.id.reyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         list = new ArrayList<>();
         adapter = new MovieAdapter(list);
@@ -41,10 +46,9 @@ public class MainActivity extends AppCompatActivity {
                 apiInterface = MovieClient.getClient().create(MovieInterface.class);
                 Call<List<Movie>> call = apiInterface.doGetMovie();
 
-                call.enqueue(new Callback<List<Movie>>) {
+                call.enqueue(new Callback<List<Movie>>() {
                     @Override
-                    public void onResponse
-                    (Call < List < Movie >> call, Response < List < Movie >> response){
+                    public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response){
                         Log.d("TAG", response.code() + "");
                         Log.d("TAG", response.toString() + "");
                         String displayResponse = "";
@@ -58,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
                             list.add(zip);
                         }
                         Toast.makeText(getApplicationContext(), adapter.getItemCount() + "", Toast.LENGTH_SHORT).show();
-                        adapter.notifyDataSerChanged();
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
-                    public void onFailure (Call < List < Movie >> call, throwable t){
+                    public void onFailure(Call<List<Movie>> call, Throwable t){
 
                     }
                 });

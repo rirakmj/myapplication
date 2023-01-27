@@ -31,34 +31,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // 데이터 추가
         floatingBtn = findViewById(R.id.floatingBtn);
         floatingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 addContact();
             }
         });
 
-        // 수정
-        //public void updateItem(Phone phone, int position){
-        //  Phone p = phoneList.get(position);
-        //p.setName(phone.getName());
-        //p.setTel(phone.getTel());
-        //notifyDataSetChanged();
-        // }
-
-        // 삭제
-        //public void removeItem
-
-        PhoneService phoneService = Retrofit2Client.getInstance().getPhoneService();
+        // 전체 보기
+        PhoneService phoneService = Retrofit2Client.getInstance().getPhoneService(); // 만들어진 PhoneService 객체를 반환해줌
         Call<List<Phone>> call = phoneService.findAll();
+
         call.enqueue(new Callback<List<Phone>>() {
             @Override
             public void onResponse(Call<List<Phone>> call, Response<List<Phone>> response) {
                 List<Phone> phoneList = response.body();
-                recyclerView = findViewById(R.id.recyclerview);
+                recyclerView = findViewById(R.id.recyclerview); // 받아온 값을 RecyclerView에 뿌리기
                 manager = new LinearLayoutManager(MainActivity.this, RecyclerView.VERTICAL, false);
                 recyclerView.setLayoutManager(manager);
 
@@ -74,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 추가하기
     private void addContact() {
         View dialogView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.layout_add_concat, null);
@@ -92,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 phoneDto.setName(etName.getText().toString());
                 phoneDto.setTel(etTel.getText().toString());
 
-                Log.d("insert", "onClick: 등록 클릭시 값 확인" + phoneDto);
+                Log.d("insert", "onClick: 등록 클릭시 값 확인" +phoneDto);
 
                 PhoneService phoneService = Retrofit2Client.getInstance().getPhoneService();
                 Call<Phone> call = phoneService.save(phoneDto);
@@ -100,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<Phone>() {
                     @Override
                     public void onResponse(Call<Phone> call, Response<Phone> response) {
-                        Log.d("insert response", "onResponse: phoneDto" + phoneDto);
+                        Log.d("insert response", "onResponse: phoneDto" +phoneDto);
 
                         phoneAdapter.addItem(response.body());
                     }
